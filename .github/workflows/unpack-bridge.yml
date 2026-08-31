@@ -1,0 +1,34 @@
+name: Unpack Bridge Core
+
+on:
+  push:
+    paths:
+      - 'bridge-core-v1.zip.b64'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode and unpack
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .unpack
+          mkdir .unpack
+          base64 -d bridge-core-v1.zip.b64 > .unpack/bridge-core-v1.zip
+          unzip -q .unpack/bridge-core-v1.zip -d .unpack/out
+          cp -a .unpack/out/bridge-core-v1/. ./
+          rm -rf .unpack bridge-core-v1.zip.b64
+      - name: Commit unpacked source
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Import Bridge Core v1 source' || exit 0
+          git push
