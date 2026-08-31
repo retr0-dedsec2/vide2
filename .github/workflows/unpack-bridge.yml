@@ -3,7 +3,8 @@ name: Unpack Bridge Core
 on:
   push:
     paths:
-      - 'bridge-core-v1.zip.b64'
+      - 'bridge-core-v1.tar.gz.b64.part1'
+      - 'bridge-core-v1.tar.gz.b64.part2'
 
 permissions:
   contents: write
@@ -14,16 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check parts
+        shell: bash
+        run: |
+          if [ ! -f bridge-core-v1.tar.gz.b64.part1 ] || [ ! -f bridge-core-v1.tar.gz.b64.part2 ]; then
+            echo 'Waiting for both archive parts.'
+            exit 0
+          fi
       - name: Decode and unpack
         shell: bash
         run: |
           set -euo pipefail
           rm -rf .unpack
           mkdir .unpack
-          base64 -d bridge-core-v1.zip.b64 > .unpack/bridge-core-v1.zip
-          unzip -q .unpack/bridge-core-v1.zip -d .unpack/out
-          cp -a .unpack/out/bridge-core-v1/. ./
-          rm -rf .unpack bridge-core-v1.zip.b64
+          cat bridge-core-v1.tar.gz.b64.part1 bridge-core-v1.tar.gz.b64.part2 | base64 -d > .unpack/bridge-core-v1.tar.gz
+          tar -xzf .unpack/bridge-core-v1.tar.gz -C .unpack
+          cp -a .unpack/bridge-core-v1/. ./
+          rm -rf .unpack bridge-core-v1.tar.gz.b64.part1 bridge-core-v1.tar.gz.b64.part2
       - name: Commit unpacked source
         shell: bash
         run: |
