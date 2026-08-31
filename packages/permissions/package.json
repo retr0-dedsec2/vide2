@@ -1,0 +1,1 @@
+{"name":"@bridge/permissions","version":"0.1.0","type":"module","main":"./src.ts","dependencies":{"@bridge/protocol":"0.1.0"}}

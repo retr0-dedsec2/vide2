@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Bridge Browser",
+  "version": "0.1.0",
+  "description": "Local browser execution adapter for Bridge Core",
+  "permissions": ["tabs", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": {"service_worker": "background.js", "type": "module"},
+  "action": {"default_title": "Bridge Browser"}
+}

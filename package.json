@@ -1,0 +1,15 @@
+{
+  "name": "bridge-core-v1",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*", "adapters/*"],
+  "scripts": {
+    "install:all": "npm install --workspaces --include-workspace-root",
+    "build": "npm run build --workspaces --if-present",
+    "dev:relay": "npm -w @bridge/relay run dev",
+    "dev:daemon": "npm -w @bridge/daemon run dev",
+    "dev:mcp": "npm -w @bridge/mcp-server run dev"
+  },
+  "engines": {"node": ">=22"}
+}
